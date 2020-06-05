@@ -1,5 +1,5 @@
-import {WebsitePersistence} from "./WebsitePersistence";
-import {WebsiteMongoosePersistence} from "./mongoose";
+import {WebsitePersistence} from './WebsitePersistence';
+import {WebsiteMongoosePersistence} from './mongoose';
 
 
 export class PersistenceFactory {

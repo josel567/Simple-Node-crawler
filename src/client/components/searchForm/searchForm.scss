@@ -1,0 +1,12 @@
+.form {
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-input {
+  flex-basis: 20%;
+  margin-right: 2em !important;
+}
