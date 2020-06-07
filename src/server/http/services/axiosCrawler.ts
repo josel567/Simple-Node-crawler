@@ -16,10 +16,16 @@ export class AxiosCrawler implements CrawlerService {
         const response = await axios.get(url);
         const $ = await cheerio.load(response.data);
         const linkTags = $('a');
-        const links: string[] = [];
+        const links: Array<{
+            anchor: string,
+            href: string
+        }> = [];
 
         await linkTags.each((i, link) => {
-            links.push(link.attribs.href);
+            links.push({
+                anchor: link.children[0].data,
+                href: link.attribs.href
+            });
         });
 
         return this.repository.createOrUpdate(url, 0, links);

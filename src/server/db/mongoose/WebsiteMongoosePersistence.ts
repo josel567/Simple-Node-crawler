@@ -12,7 +12,7 @@ export class WebsiteMongoosePersistence implements WebsitePersistence {
         this.model = mongoose.model('website', WebsiteSchema);
     }
 
-    public async createOrUpdate(url: string, level: number, links: string[]): Promise<Website> {
+    public async createOrUpdate(url: string, level: number, links: Array<{anchor: string, href: string}>): Promise<Website> {
         return this.model.findOneAndUpdate({url}, {
             url,
             level,

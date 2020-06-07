@@ -1,12 +1,20 @@
-.form {
-  width: 100%;
-  min-height: 300px;
+.form-container, .loading-container {
   display: flex;
   justify-content: center;
+}
+
+.form {
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 .search-input {
-  flex-basis: 20%;
-  margin-right: 2em !important;
+  flex-basis: 50%;
+}
+
+.level-input {
+  flex-basis: 15%;
 }
