@@ -1,9 +1,9 @@
 export interface Website {
-    _id: string;
     url: string;
     links: Array<{
         anchor: string,
         href: string
     }>;
+    time: number;
     level: number;
 }

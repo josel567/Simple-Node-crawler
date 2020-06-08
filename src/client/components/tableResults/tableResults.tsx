@@ -73,7 +73,7 @@ export class TableResults extends Component<TableResultsProps, {}> {
                                 </Typography>
 
                                 <Typography variant="h5" component="h2">
-                                    1m 12s
+                                    {results.time}s
                                 </Typography>
 
                             </CardContent>
@@ -117,7 +117,7 @@ export class TableResults extends Component<TableResultsProps, {}> {
                                 </TableCell>
 
                                 <TableCell>
-                                    href
+                                    Link
                                 </TableCell>
 
                             </TableRow>

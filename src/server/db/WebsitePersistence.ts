@@ -1,6 +1,6 @@
 import {Website} from '../../model';
 
 export interface WebsitePersistence {
-    createOrUpdate(url: string, level: number, links: Array<{anchor: string, href: string }>): Promise<Website>;
+    createOrUpdate(website: Website): Promise<Website>;
     get(url: string): Promise<Website>;
 }

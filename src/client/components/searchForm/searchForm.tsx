@@ -53,7 +53,7 @@ export class SearchForm extends Component<{}, SearchFormState> {
                 </div>
 
                 { this.state.isLoading && <div className={styles.loadingContainer}>
-                    <img src="/public/images/loading.gif" alt="Loading"/>
+                    <img src="/public/images/loading.gif" alt="Loading" width="80"/>
                 </div> }
 
                 { this.state.results && <TableResults results={this.state.results} /> }
