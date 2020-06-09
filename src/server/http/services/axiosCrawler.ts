@@ -1,11 +1,14 @@
-import {CrawlerService} from './types';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import cheerio from 'cheerio';
-import {Website} from '../../../model';
+
 import {WebsitePersistence} from '../../db';
+import {Website} from '../../../model';
+import {CrawlerService} from './types';
 
 export class AxiosCrawler implements CrawlerService {
     private repository: WebsitePersistence;
+    private links: Array<{anchor: string, href: string}> = [];
+    private scrapedLinks: string[] = [];
 
     public constructor(repository: WebsitePersistence) {
         this.repository = repository;
@@ -13,36 +16,67 @@ export class AxiosCrawler implements CrawlerService {
 
     public async execute(url: string, level: number): Promise<Website> {
 
-        const startTime = new Date();
+        await this.scrapLink(url, level);
 
-        const response = await axios.get(url);
-        const $ = await cheerio.load(response.data);
-        const linkTags = $('a');
+        return this.repository.createOrUpdate({url, level, links: this.links});
+
+    }
+
+    private filterInternalLinks(url: string, links: Array<{anchor: string, href: string}>): Array<{anchor: string, href: string}> {
+        return links.filter((link: {anchor: string, href: string}) => link.href.startsWith(url));
+    }
+
+    private async extractLinksFromTags(url: string, response: AxiosResponse): Promise<Array<{anchor: string, href: string}>> {
+
         const links: Array<{anchor: string, href: string}> = [];
+        const $ = await cheerio.load(response.data);
+        const linkTags: Cheerio = $('a');
 
-        await linkTags.each(async (i, link) => {
+        linkTags.each((i: number, link: CheerioElement) => {
 
-            if (link.attribs.href.startsWith('/')) {
-                link.attribs.href = url + link.attribs.href;
-            }
+            if(link.attribs.href) {
 
-            links.push({
-                anchor: link.children[0].data,
-                href: link.attribs.href
-            });
+                if (link.attribs.href.startsWith('/')) {
+                    link.attribs.href = url + link.attribs.href;
+                }
 
-            try {
-                await this.execute(link.attribs.href, level);
-            } catch (e) {
-                console.log(e);
+                links.push({
+                    anchor: link.children[0].data,
+                    href: link.attribs.href
+                });
+
             }
 
         });
 
-        const finishTime = new Date();
-        const time = Math.abs((startTime.getTime() - finishTime.getTime()) / 1000);
+        return links;
 
-        return this.repository.createOrUpdate({url, level: 0, links, time});
+    }
+
+    private async scrapLink(url: string, level: number): Promise<void> {
+
+        if(!this.scrapedLinks.includes(url)) {
+
+            this.scrapedLinks.push(url);
+            const response = await axios.get(url);
+            const currentPageLinks: Array<{anchor: string, href: string}> = await this.extractLinksFromTags(url, response);
+            const internalLinks: Array<{anchor: string, href: string}> = this.filterInternalLinks(url, currentPageLinks);
+
+            for (const link of internalLinks) {
+
+                this.links.push({
+                    anchor: link.anchor,
+                    href: link.href
+                });
+
+                this.scrapedLinks.push(link.href);
+
+                await this.scrapLink(link.href, level);
+
+            }
+
+        }
+
     }
 
 }

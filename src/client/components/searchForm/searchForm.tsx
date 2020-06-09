@@ -8,6 +8,7 @@ import {Website} from '../../../model';
 interface SearchFormState {
     results?: Website;
     isLoading?: boolean;
+    executionTime?: number;
 }
 
 export class SearchForm extends Component<{}, SearchFormState> {
@@ -56,7 +57,7 @@ export class SearchForm extends Component<{}, SearchFormState> {
                     <img src="/public/images/loading.gif" alt="Loading" width="80"/>
                 </div> }
 
-                { this.state.results && <TableResults results={this.state.results} /> }
+                { this.state.results && <TableResults results={this.state.results} executionTime={this.state.executionTime} /> }
 
             </>
 
@@ -74,10 +75,17 @@ export class SearchForm extends Component<{}, SearchFormState> {
         const url = e.currentTarget.url.value;
         const level = e.currentTarget.level.value;
 
+        const startTime = new Date();
+
         axios.get(`http://localhost:3000/crawl?url=${url}&level=${level}`).then((res: AxiosResponse) => {
+
+            const finishTime = new Date();
+            const executionTime = Math.abs((startTime.getTime() - finishTime.getTime()) / 1000);
+
             this.setState({
                 results: res.data,
-                isLoading: false
+                isLoading: false,
+                executionTime
             });
         });
 

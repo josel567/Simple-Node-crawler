@@ -16,13 +16,14 @@ import {Website} from '../../../model';
 
 interface TableResultsProps {
     results: Website;
+    executionTime: number;
 }
 
 export class TableResults extends Component<TableResultsProps, {}> {
 
     public render(): React.ReactNode {
 
-        const {results} = this.props;
+        const {results, executionTime} = this.props;
 
         const linksList = results.links.map((link: {anchor: string, href: string}, index: number) =>
             <TableRow key={index} hover role="checkbox">
@@ -73,7 +74,7 @@ export class TableResults extends Component<TableResultsProps, {}> {
                                 </Typography>
 
                                 <Typography variant="h5" component="h2">
-                                    {results.time}s
+                                    {executionTime}s
                                 </Typography>
 
                             </CardContent>

@@ -1,4 +1,5 @@
 import express from 'express';
+
 import {CrawlerService} from '../services/types';
 
 export class CrawlerController {

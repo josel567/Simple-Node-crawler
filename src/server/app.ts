@@ -1,16 +1,17 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import bodyParser from "body-parser";
-import config from './config';
-import {crawlerRoutes} from "./http/routes";
+import bodyParser from 'body-parser';
+
+import config, {Config} from './config';
+import {crawlerRoutes} from './http/routes';
 
 export class Application {
 
-    app: express.Application;
-    config = config;
+    private app: express.Application;
+    private config: Config = config;
 
-    constructor() {
+    public constructor() {
         this.app = express();
         this.app.use(cors());
         this.app.use(bodyParser.json());
@@ -19,7 +20,7 @@ export class Application {
         this.app.use(crawlerRoutes);
     }
 
-    async startServer(): Promise<void> {
+    public async startServer(): Promise<void> {
         try {
 
             this.app.listen(this.config.port);
