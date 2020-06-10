@@ -10,7 +10,7 @@ interface SearchFormState {
     results?: Website;
     isLoading?: boolean;
     error?: boolean;
-    executionTime?: number;
+    totalTime?: {m: number, s: number};
 }
 
 export class SearchForm extends Component<{}, SearchFormState> {
@@ -63,7 +63,7 @@ export class SearchForm extends Component<{}, SearchFormState> {
                     <p>An error has ocurred.</p>
                 </div> }
 
-                { this.state.results && <TableResults results={this.state.results} executionTime={this.state.executionTime} /> }
+                { this.state.results && <TableResults results={this.state.results} totalTime={this.state.totalTime} /> }
 
             </>
 
@@ -75,7 +75,8 @@ export class SearchForm extends Component<{}, SearchFormState> {
         e.preventDefault();
         this.setState({
             isLoading: true,
-            results: undefined
+            results: undefined,
+            error: undefined
         });
 
         const url = e.currentTarget.url.value;
@@ -86,12 +87,20 @@ export class SearchForm extends Component<{}, SearchFormState> {
         axios.get(`http://localhost:3000/crawl?url=${url}&level=${level}`).then((res: AxiosResponse) => {
 
             const finishTime = new Date();
-            const executionTime = Math.abs((startTime.getTime() - finishTime.getTime()) / 1000);
+            const executionTime = Math.round(Math.abs((startTime.getTime() - finishTime.getTime()) / 1000));
+            const totalTime: {m: number, s: number} = {m: 0, s: 0};
+
+            if (executionTime > 60) {
+                totalTime.m = Math.floor(executionTime / 60);
+                totalTime.s = executionTime - totalTime.m * 60;
+            } else {
+                totalTime.s = executionTime;
+            }
 
             this.setState({
                 results: res.data,
                 isLoading: false,
-                executionTime
+                totalTime
             });
         }).catch(() => {
             this.setState({

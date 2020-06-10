@@ -17,7 +17,7 @@ describe('CrawlerController', () => {
 
         const response = await request(app).get('/crawl')
             .query({
-                url: 'https://elpais.com',
+                url: 'https://www.nnergix.com/',
                 level: 2
             });
 
