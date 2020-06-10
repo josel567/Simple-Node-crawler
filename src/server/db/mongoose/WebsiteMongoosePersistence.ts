@@ -13,11 +13,10 @@ export class WebsiteMongoosePersistence implements WebsitePersistence {
 
     public async createOrUpdate(website: Website): Promise<Website> {
 
-        const {url, level, links} = website;
+        const {url, links} = website;
 
         return this.model.findOneAndUpdate({url}, {
             url,
-            level,
             links
         }, {
             new: true,

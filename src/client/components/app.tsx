@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {Header} from './header';
 import styles from './index.scss';
 import {SearchForm} from './searchForm';

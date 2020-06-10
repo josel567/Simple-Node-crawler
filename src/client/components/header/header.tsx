@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import styles from './header.scss';
 import {AppBar, Toolbar} from '@material-ui/core';
 
+import styles from './header.scss';
 
 export class Header extends Component<{}, {}> {
 

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Application as ExpressApp} from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -8,7 +8,7 @@ import {crawlerRoutes} from './http/routes';
 
 export class Application {
 
-    private app: express.Application;
+    private readonly app: express.Application;
     private config: Config = config;
 
     public constructor() {
@@ -18,9 +18,17 @@ export class Application {
         this.app.use(bodyParser.urlencoded({ extended: true }));
 
         this.app.use(crawlerRoutes);
+
+        this.app.use((err: express.ErrorRequestHandler, req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+            console.error(err);
+
+            res.sendStatus(500);
+
+        });
     }
 
-    public async startServer(): Promise<void> {
+    public async startServer(): Promise<ExpressApp> {
         try {
 
             this.app.listen(this.config.port);
@@ -31,6 +39,8 @@ export class Application {
                 useUnifiedTopology: true
             });
             console.log(`Connected to mongoDB in ${this.config.db.database} database.`);
+
+            return this.app;
 
         } catch (e) {
             console.log(e);

@@ -4,5 +4,4 @@ export interface Website {
         anchor: string,
         href: string
     }>;
-    level: number;
 }

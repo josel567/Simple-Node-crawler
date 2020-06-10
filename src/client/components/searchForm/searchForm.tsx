@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import styles from './searchForm.scss';
 import {Button, TextField} from '@material-ui/core';
 import axios, {AxiosResponse} from 'axios';
+
+import styles from './searchForm.scss';
 import {TableResults} from '../tableResults';
 import {Website} from '../../../model';
 
 interface SearchFormState {
     results?: Website;
     isLoading?: boolean;
+    error?: boolean;
     executionTime?: number;
 }
 
@@ -57,6 +59,10 @@ export class SearchForm extends Component<{}, SearchFormState> {
                     <img src="/public/images/loading.gif" alt="Loading" width="80"/>
                 </div> }
 
+                { this.state.error && <div className={styles.errorContainer}>
+                    <p>An error has ocurred.</p>
+                </div> }
+
                 { this.state.results && <TableResults results={this.state.results} executionTime={this.state.executionTime} /> }
 
             </>
@@ -86,6 +92,11 @@ export class SearchForm extends Component<{}, SearchFormState> {
                 results: res.data,
                 isLoading: false,
                 executionTime
+            });
+        }).catch(() => {
+            this.setState({
+                isLoading: false,
+                error: true
             });
         });
 

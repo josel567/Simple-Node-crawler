@@ -1,12 +1,14 @@
 import express from 'express';
 
-import {CrawlerService} from '../services/types';
+import {AxiosCrawler} from '../services';
+import {WebsitePersistence} from '../../db';
 
 export class CrawlerController {
-    private crawler: CrawlerService;
 
-    public constructor(crawler: CrawlerService) {
-        this.crawler = crawler;
+    private readonly persistence: WebsitePersistence;
+
+    public constructor(persistence: WebsitePersistence) {
+        this.persistence = persistence;
         this.crawl = this.crawl.bind(this);
     }
 
@@ -15,8 +17,11 @@ export class CrawlerController {
         const {url, level} = req.query;
 
         if(typeof url === 'string' && typeof level === 'string') {
-            const results = await this.crawler.execute(url, +level);
+
+            const crawler = new AxiosCrawler(this.persistence, +level, url);
+            const results = await crawler.execute(url);
             res.json(results);
+
         } else {
             res.status(500);
         }

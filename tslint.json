@@ -96,7 +96,7 @@
     "no-implicit-dependencies": [
       true,
       [
-
+        "supertest"
       ]
     ],
     "no-inferred-empty-object-type": false,
