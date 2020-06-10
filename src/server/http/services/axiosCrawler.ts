@@ -1,4 +1,3 @@
-
 import axios, {AxiosResponse} from 'axios';
 import cheerio from 'cheerio';
 
@@ -37,33 +36,29 @@ export class AxiosCrawler implements CrawlerService {
         }
 
         if(!this.scrapedLinks.includes(sanitizedUrl)) {
-
-            console.log(` -----------------> Start scrapping ${sanitizedUrl}`);
-
             this.scrapedLinks.push(sanitizedUrl);
-
-            try {
-                const response = await axios.get(sanitizedUrl);
-
-                const currentPageLinks: Array<{anchor: string, href: string}> = await this.extractLinksFromTags(sanitizedUrl, response);
-                const internalLinks: Array<{anchor: string, href: string}> = await  this.filterInternalLinks(currentPageLinks);
-
-                for (const link of internalLinks) {
-
-                    if(!this.links.find(l => l.href === link.href)) {
-                        this.links.push(link);
-                    }
-
-                    await this.scrapLink(link.href, level + 1);
-
-                }
-            } catch(e) {
-                console.error(e);
-            }
-
         }
 
-        return;
+        try {
+            const response = await axios.get(sanitizedUrl);
+
+            console.log(` Current URL -----> ${sanitizedUrl}`);
+
+            const currentPageLinks: Array<{anchor: string, href: string}> = await this.extractLinksFromTags(sanitizedUrl, response);
+            const internalLinks: Array<{anchor: string, href: string}> = await  this.filterInternalLinks(currentPageLinks);
+
+            for (const link of internalLinks) {
+
+                if(!this.links.find(l => l.href === link.href)) {
+                    this.links.push(link);
+                }
+
+                await this.scrapLink(link.href, level + 1);
+
+            }
+        } catch(e) {
+            console.error(e);
+        }
 
     }
 
@@ -84,11 +79,6 @@ export class AxiosCrawler implements CrawlerService {
                 // Removing relative links
                 if (link.attribs.href.startsWith('/') && link.attribs.href.indexOf(this.baseUrl) === -1) {
                     link.attribs.href = url + link.attribs.href;
-                }
-
-                // Removing slash at the first character
-                if (link.attribs.href.startsWith('/') && link.attribs.href.indexOf(this.baseUrl) !== -1) {
-                    link.attribs.href = link.attribs.href.slice(1);
                 }
 
                 // Removing special links
@@ -113,7 +103,7 @@ export class AxiosCrawler implements CrawlerService {
     private sanitizeUrl(url: string): string {
 
         if(url.endsWith('/')) {
-           return url.slice(0, -1);
+            return url.slice(0, -1);
         }
 
         return url;

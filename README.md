@@ -10,3 +10,5 @@ Main scripts to run it locally:
  - **npm run client**: To start only the client on port 8000.
  - **npm run dev**: To start both the server on port 3000 and the client on port 8000.
  - **npm run test**: To run tests.
+ 
+ Note: application response times may be a little slow depending on the case. Please be patient while the results are generated.

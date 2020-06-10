@@ -60,7 +60,7 @@ export class SearchForm extends Component<{}, SearchFormState> {
                 </div> }
 
                 { this.state.error && <div className={styles.errorContainer}>
-                    <p>An error has ocurred.</p>
+                    <p>An error has occurred.</p>
                 </div> }
 
                 { this.state.results && <TableResults results={this.state.results} totalTime={this.state.totalTime} /> }
