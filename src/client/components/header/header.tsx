@@ -11,7 +11,7 @@ export class Header extends Component<{}, {}> {
             <div className={styles.header}>
                 <AppBar position="static" className={styles.appBar}>
                     <Toolbar className={styles.centerToolbar}>
-                        <img src="public/images/logo.png" alt="Logo"/>
+                        <h1>Simple Node crawler</h1>
                     </Toolbar>
                 </AppBar>
             </div>

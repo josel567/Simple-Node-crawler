@@ -10,11 +10,10 @@
     "watch": "NODE_ENV=development nodemon --exec ts-node src/server/index.ts",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "tslint:fix": "tslint --fix src/**/*.{ts,js}",
-    "test": "NODE_ENV=test mocha -r ts-node/register src/tests/*.spec.ts --exit",
+    "test": "jest",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "ts-node src/server/index.ts",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "jest"
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",

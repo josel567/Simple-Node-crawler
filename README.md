@@ -1,6 +1,4 @@
-# Nnergix crawler
-
-Technical test for Nnergix.
+# Simple Node crawler
 
 The project consists of a backend (node.js + TS + MongoDB) and a frontend (React.js + TS).
 
